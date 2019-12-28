@@ -64,6 +64,7 @@ export default class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
+        <View><Text style={{ textAlign: 'center', paddingTop: 20, paddingBottom: 40, fontSize: 40 }}>Inflation Calculator</Text></View>
         {/* <Button title="Calculate Inflation"
           //with trackEvent -> you will know how your user interact with your app, location, do they reach this button that leads to the new feature you just implemented,  are they signing up, even the session of how long the user is in the app, logging in , anything you want to track can be track by just calling this method.
           onPress={() => Analytics.trackEvent('calculate_inflation', { Internet: 'Cellular', GPS: 'On' })} /> */}
@@ -77,18 +78,19 @@ export default class App extends React.Component {
         <TextInput placeholder="Current risk free rate"
           style={styles.textBox} keyboardType='decimal-pad'
           onChangeText={(riskFreeRate) => this.setState({ riskFreeRate })} />
-        <TextInput placeholder="Amount you want to save"
+        <TextInput placeholder="Amount you are saving"
           style={styles.textBox} keyboardType='decimal-pad'
           onChangeText={(amount) => this.setState({ amount })} />
-        <TextInput placeholder="For how long (in years) will you save?"
+        <TextInput placeholder="For how long (in years) will you save it?"
           style={styles.textBox} keyboardType='decimal-pad'
           onChangeText={(timeInYears) => this.setState({ timeInYears })} />
         <Button title="Calculate inflation"
+          style={{ marginTop: 35, marginBottom: 45}}
           onPress={() => {
             this.calculate();
             Analytics.trackEvent('calculate_inflation', { Internet: 'WiFi', GPS: 'Off' });
           }} />
-        <Text style={styles.label}>{this.state.timeInYears} years from now you will still have ${this.state.amount} but it will only be worth ${this.state.afterInflation}.</Text>
+        <Text style={styles.label}>{this.state.timeInYears} years from now you will still have ${this.state.amount}, but it will only be worth ${this.state.afterInflation}.</Text>
         <Text style={styles.label}>But if you invest it at a risk free rate you will have ${this.state.atRiskFree}.</Text>
         <Text style={styles.label}>Which will be worth ${this.state.atRiskFreeAfterInflation} after inflation.</Text>
         <Text style={styles.label}>A difference of: ${this.state.difference}.</Text>
@@ -101,17 +103,19 @@ export default class App extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 40,
+    marginTop: 80,
     marginHorizontal: 16
   },
   label: {
-    marginTop: 10
+    marginTop: 10,
+    fontSize: 18
   },
   textBox: {
-    height: 30,
+    height: 40,
+    padding: 10,
     borderColor: 'gray',
     borderWidth: 1,
-    marginTop: 10
+    marginBottom: 10
   },
   scrollView: {
     backgroundColor: Colors.lighter,
