@@ -1,114 +1,44 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
 
-import React from 'react';
+import React, { Component } from 'react';
 import {
-  SafeAreaView,
   StyleSheet,
-  ScrollView,
   View,
   Text,
-  StatusBar,
+  Button
 } from 'react-native';
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+//packages for crashes from appcenter crashes
+import Crashes from 'appcenter-crashes';
+import Analytics from 'appcenter-analytics';
 
-const App: () => React$Node = () => {
-  return (
-    <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </>
-  );
-};
+export default class App extends Component {
+  constructor() {
+    super();
 
-const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
-  },
-  engine: {
-    position: 'absolute',
-    right: 0,
-  },
-  body: {
-    backgroundColor: Colors.white,
-  },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
-  },
-});
+    this.checkPreviousSession();
+  }
 
-export default App;
+
+  async checkPreviousSession() {
+    //appcenter is using this method -> hasCrashedInLastSession
+    const didCrash = await Crashes.hasCrashedInLastSession();
+    if (didCrash) {
+      //this is also from appcenter method -> will be uploaded to appcenter
+      const report = await Crashes.hasCrashedInLastSession();
+      alert("Sorry about that crash, we're working on a solution");
+    }
+  }
+
+  render() {
+    return (
+      <View style={{ marginTop: 50 }}>
+        <Button title="Calculate Inflation"
+          //with trackEvent -> you will know how your user interact with your app, location, do they reach this button that leads to the new feature you just implemented,  are they signing up, even the session of how long the user is in the app, logging in , anything you want to track can be track by just calling this method.
+          onPress={() => Analytics.trackEvent('calculate_inflation', { Internet: 'Cellular', GPS: 'On' })} />
+        {/* onPress={() => Crashes.generateTestCrash()} /> */}
+        {/* //onPress={() => { throw new Error("some text") }} /> */}
+
+      </View>
+    )
+  }
+}
